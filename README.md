@@ -7,7 +7,8 @@ It will then scale what is written by the user using the stylus onto the connect
 
 To setup the virtual environment enter the cloned repository and type the following:
 
-```# Make the setup file executable
+```python
+# Make the setup file executable
 chmod +x setup.sh
 
 # Enter the virtual environment
