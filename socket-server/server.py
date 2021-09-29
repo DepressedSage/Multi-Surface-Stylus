@@ -5,8 +5,7 @@ HEADER = 64
 # Sets the port for the connection
 PORT = 5050
 # Gets the IPv4 address of the SERVER side device
-#SERVER = socket.gethostbyname(socket.gethostname())
-SERVER = '127.0.1.1'
+SERVER = socket.gethostbyname(socket.gethostname())
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNET"
