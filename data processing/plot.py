@@ -2,6 +2,7 @@ import cv2 as cv
 import numpy as np
 from screeninfo import get_monitors
 
+arr = []
 
 for m in get_monitors():
     ms = str(m)
@@ -14,8 +15,7 @@ for m in get_monitors():
 
 canvas = np.ones((1080, 1920))
 #im = cv.line(canvas, (0, 0), (255, 255), (0, 0, 0), 10)
-curv = cv.polylines(
-    canvas, [np.array([[0, 0], [100, 5], [200, 50]])], False, (0, 0, 255), 10)
+
 cv.imshow("white", canvas)
 cv.waitKey(0)
 cv.destroyAllWindows()

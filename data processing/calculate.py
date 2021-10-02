@@ -1,5 +1,4 @@
-import numpy as numpy
-import cv2 as cv
+import numpy as np
 
 # vX, vY, L, B, lf=L/1080
 # touch, pressure, ax, ay, x, y
