@@ -17,13 +17,15 @@ Af = [0, 0]        # current acceleration
 we = False         # whether to write or erase
 pThresh = 0.1      # pressure threshold for activation
 arr = []           # array to store points till plotting
-A = [0,0,0]
-G = [0,0,0]
-P = 0
+A = [0, 0, 0]      # acceleration vector
+G = [0, 0, 0]      # gyroscopic readings
+P = 0              # pressure
+
 
 def JSONRead():
     global A, G, P, we
-    readings = json.load(JSONFILENAME)
+    JSONstr=""
+    readings = json.loads(JSONstr)
 
     ax = readings(["accX"])
     ay = readings(["accY"])
@@ -35,6 +37,7 @@ def JSONRead():
     we = readings(["erase"])
     A = [ax, ay, az]
     G = [gx, gy, gz]
+
 
 def getAngle(x, g):
     x = x+g*rr
@@ -95,8 +98,10 @@ def cleararr():
 
 def refresh():
     if not we:
-        color = ()
-    cv.polylines(canvas,[np.array(arr)], False, (0, 0, 255), 10)
+        color = (0, 0, 0)
+    else:
+        color = (255, 255, 255)
+    cv.polylines(canvas, [np.array(arr)], False, color, 10)
     cv.imshow('image', canvas)
 
 
@@ -107,19 +112,18 @@ def plotPoints():
     else:
         cleararr()
 
-def 
 
 if __name__ == "__main__":
-    A, G, P = binaryRead()
+    A, G, P = JSONRead()
     i, j, k = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
     X = 0*i+0*j+0*k                                     # origin
     canvas = np.ones((1080, 1920))                      # defining the canvas
     while(1):                                           # next line exists
-        changeCoordinateSystem(A,G,Xa)
-        calculateCoordinates(R,A)
+        changeCoordinateSystem(A, G, Xa)
+        calculateCoordinates(R, A)
         plotPoints()
         time.sleep(rr)
-        
+
     cv.imshow('image', canvas)
     cv.waitKey(0)
     cv.destroyAllWindows()
