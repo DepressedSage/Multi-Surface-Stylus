@@ -5,8 +5,7 @@ from screeninfo import get_monitors
 
 for m in get_monitors():
     ms = str(m)
-    print(ms[ms.index("width")+6:ms.index("width")+10],
-          ms[ms.index("height")+6:ms.index("height")+10])
+    # get monitor info from ms
 
 arr = []
 
