@@ -25,12 +25,12 @@ def JSONRead():
     global A, G, P, we
     readings = json.load(JSONFILENAME)
 
-    ax = readings(["ax"])
-    ay = readings(["ay"])
-    az = readings(["az"])
-    gx = readings(["gx"])
-    gy = readings(["gy"])
-    gz = readings(["gz"])
+    ax = readings(["accX"])
+    ay = readings(["accY"])
+    az = readings(["accZ"])
+    gx = readings(["gyroX"])
+    gy = readings(["gyroY"])
+    gz = readings(["gyroZ"])
     P = readings(["pressure"])
     we = readings(["erase"])
     A = [ax, ay, az]
@@ -94,7 +94,9 @@ def cleararr():
 
 
 def refresh():
-    cv.polylines([np.array(arr)], False, (0, 0, 255), 10)
+    if not we:
+        color = ()
+    cv.polylines(canvas,[np.array(arr)], False, (0, 0, 255), 10)
     cv.imshow('image', canvas)
 
 
