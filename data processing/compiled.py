@@ -1,10 +1,12 @@
+import time
 import numpy as np
+import json
 import cv2 as cv
 import math
 from screeninfo import get_monitors
 
-# defining required constants
-rr = 0.1           # refresh rate
+# defining required variables
+rr = 0.01          # refresh rate
 Xa = [0, 0, 0]     # Angles of XYZ wrt ijk
 ao1 = [0, 0]       # last to last acceleration
 vo1 = [0, 0]       # last to last velocity vector
@@ -15,11 +17,24 @@ Af = [0, 0]        # current acceleration
 we = False         # whether to write or erase
 pThresh = 0.1      # pressure threshold for activation
 arr = []           # array to store points till plotting
+A = [0,0,0]
+G = [0,0,0]
+P = 0
 
+def JSONRead():
+    global A, G, P, we
+    readings = json.load(JSONFILENAME)
 
-def binaryRead():
-    pass
-
+    ax = readings(["ax"])
+    ay = readings(["ay"])
+    az = readings(["az"])
+    gx = readings(["gx"])
+    gy = readings(["gy"])
+    gz = readings(["gz"])
+    P = readings(["pressure"])
+    we = readings(["erase"])
+    A = [ax, ay, az]
+    G = [gx, gy, gz]
 
 def getAngle(x, g):
     x = x+g*rr
@@ -90,12 +105,18 @@ def plotPoints():
     else:
         cleararr()
 
+def 
 
 if __name__ == "__main__":
     A, G, P = binaryRead()
     i, j, k = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
     X = 0*i+0*j+0*k                                     # origin
     canvas = np.ones((1080, 1920))                      # defining the canvas
+    while(1):                                           # next line exists
+        changeCoordinateSystem(A,G,Xa)
+        calculateCoordinates(R,A)
+        plotPoints()
+        time.sleep(rr)
     cv.imshow('image', canvas)
     cv.waitKey(0)
     cv.destroyAllWindows()
