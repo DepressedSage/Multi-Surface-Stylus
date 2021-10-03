@@ -3,7 +3,7 @@ import cv2 as cv
 import math
 from screeninfo import get_monitors
 
-# defining required constants
+# defining required variables
 rr = 0.1           # refresh rate
 Xa = [0, 0, 0]     # Angles of XYZ wrt ijk
 ao1 = [0, 0]       # last to last acceleration
