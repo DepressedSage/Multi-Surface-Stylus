@@ -6,7 +6,11 @@ import math
 from screeninfo import get_monitors
 
 # defining required variables
+<<<<<<< HEAD
 rr = 0.01          # refresh rate
+=======
+rr = 0.1           # refresh rate
+>>>>>>> 186f284131063f1a27e5dc67e27031f07b22459e
 Xa = [0, 0, 0]     # Angles of XYZ wrt ijk
 ao1 = [0, 0]       # last to last acceleration
 vo1 = [0, 0]       # last to last velocity vector
@@ -116,7 +120,10 @@ if __name__ == "__main__":
         changeCoordinateSystem(A,G,Xa)
         calculateCoordinates(R,A)
         plotPoints()
+<<<<<<< HEAD
         time.sleep(rr)
+=======
+>>>>>>> 186f284131063f1a27e5dc67e27031f07b22459e
     cv.imshow('image', canvas)
     cv.waitKey(0)
     cv.destroyAllWindows()
