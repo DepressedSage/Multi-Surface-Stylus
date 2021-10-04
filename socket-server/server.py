@@ -18,8 +18,8 @@ def handleClient(conn, addr):
 
     connected = True
     while connected:
+        msg_length = conn.recv(HEADER).decode(FORMAT)
         if msgLength:
-            msgLength = conn.recv(HEADER).decode(FORMAT)
             msgLength = int(msgLength)
             msg = conn.recv(msgLength).decode(FORMAT)
             if msg == DISCONNECT_MESSAGE:
@@ -34,9 +34,9 @@ def start():
     print("[LISTENING] Server is listening on", SERVER)
     while True:
         conn, addr = socketServer.accept()
-        thread = threading.Thread(target = handleClient, args = (conn, addr))
-        thread.start()
-        print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
+        #thread = threading.Thread(target = handleClient, args = (conn, addr))
+        #thread.start()
+        #print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
 
 print("[STARTING] server is starting...")
 start()

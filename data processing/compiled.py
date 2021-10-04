@@ -119,7 +119,7 @@ if __name__ == "__main__":
     X = 0*i+0*j+0*k                                     # origin
     canvas = np.ones((1080, 1920))                      # defining the canvas
     while(1):                                           # next line exists
-        changeCoordinateSystem(A, G, Xa)
+        R,Xa=changeCoordinateSystem(A, G, Xa)
         calculateCoordinates(R, A)
         plotPoints()
         time.sleep(rr)
