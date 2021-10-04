@@ -3,22 +3,7 @@ import numpy as np
 import json
 import cv2 as cv
 import math
-import socket
-import threading
-
 from screeninfo import get_monitors
-
-HEADER = 110
-# Sets the port for the connection
-PORT = 5050
-# Gets the IPv4 address of the SERVER side device
-SERVER = socket.gethostbyname(socket.gethostname())
-ADDR = (SERVER, PORT)
-FORMAT = 'utf-8'
-DISCONNECT_MESSAGE = "!DISCONNECT"
-
-socketServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-socketServer.bind(ADDR)
 
 # defining required variables
 rr = 0.1           # refresh rate
@@ -29,42 +14,16 @@ ao = np.array([0, 0])        # last acceleration
 vo = np.array([0, 0])        # last velocity vector
 xo = np.array([0, 0])        # last coordinate
 Af = np.array([0, 0])        # current acceleration
-we = False                   # whether to write or erase
-pThresh = 0.1                # pressure threshold for activation
-arr = []                     # array to store points till plotting
+we = False         # whether to write or erase
+pThresh = 0.1      # pressure threshold for activation
+arr = []           # array to store points till plotting
 A = np.array([0, 0, 0])      # acceleration vector
 G = np.array([0, 0, 0])      # gyroscopic readings
-P = 1                        # pressure
+P = 1              # pressure
 
-def handleClient(conn, addr):
-    print(f"[NEW CONNECTION] {addr} connected.")
-
-    connected = True
-    while connected:
-        msg = conn.recv(HEADER).decode(FORMAT)
-        msgLength=len(msg)
-        if msgLength:
-           # msgLength = int(msgLength)
-            msg = conn.recv(HEADER).decode(FORMAT)
-            JSONRead('{"accX": 308, "accY": -164, "accZ": 1,"gyroX": -656, "gyroY": -415, "gyroZ": 110, "pressure": 1, "erase": 0}')
-            if msg == DISCONNECT_MESSAGE:
-                connected = False
-
-    print("Closing connection")
-    cv.destroyAllWindows()
-    conn.close()
-
-def start():
-    socketServer.listen()
-    print("[LISTENING] Server is listening on", SERVER)
-    while True:
-        conn, addr = socketServer.accept()
-        thread = threading.Thread(target = handleClient, args = (conn, addr))
-        thread.start()
-        print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
 
 def JSONRead(JSONstr):
-    global A, G, P, we, Xa, rr
+    global A, G, P, we
     readings = json.loads(JSONstr)
 
     ax = readings["accX"]
@@ -77,12 +36,6 @@ def JSONRead(JSONstr):
     we = readings["erase"]
     A = np.array([ax, ay, az])
     G = np.array([gx, gy, gz])
-
-    R, Xa = changeCoordinateSystem(A, G, Xa)
-    calculateCoordinates(R, A)
-    plotPoints()
-    cv.waitKey(0)
-    time.sleep(rr)
 
 
 def getAngle(x, g):
@@ -123,19 +76,18 @@ def calculateCoordinates(R, A):
     ax, ay, az = A
     X, Y, Z = R
     accel = ax*X+ay*Y+az*Z
-    Ax, Ay, Az = accel                                                                        # in universal coordinate vectors
-    vo = np.array([x*rr/2 for x in (ao+ao1)]+vo1) 
-    xf = np.array([x*pow(rr, 2)/4 for x in (Af+ao)])+np.array([x *
-                                                               rr for x in vo])+np.array(xo) 
-    xo = np.array(xo)+np.array(xf)                                                            # pass to plot.py if pressure>thresh
-    vo1 = vo                                                                                  # updation
+    Ax, Ay, Az = accel          # in universal coordinate vectors
+    vo = np.array([x*rr/2 for x in (ao+ao1)]+vo1)        #(ao+ao1)*rr/2 + vo1
+    xf = np.array([x*pow(rr,2)/4 for x in (Af+ao)])+np.array([x*rr for x in vo])+np.array(xo)   #(Af+ao)*pow(rr, 2)/4+vo*rr+xo
+    xo = np.array(xo)+np.array(xf)                # pass to plot.py if pressure>thresh
+    vo1 = vo                    # updation
     ao1 = ao
     ao = Af
 
 
 def write(coord):
     global arr
-    arr = list(arr)
+    arr=list(arr)
     arr.append(coord)
     refresh()
 
@@ -151,9 +103,9 @@ def refresh():
         color = (0, 0, 0)
     else:
         color = (255, 255, 255)
-    arr = np.array(arr)
-    coords = arr.astype(int)
-    cv.polylines(canvas, [np.array(coords)], False, (0, 0, 255), 10)
+    arr=np.array(arr)
+    coords=arr.astype(int)
+    cv.polylines(canvas, [np.array(coords)], False, (0,0,255), 10)
     cv.imshow('image', canvas)
 
 
@@ -166,17 +118,15 @@ def plotPoints():
 
 
 if __name__ == "__main__":
+    JSONRead('{"accX": 308, "accY": -164, "accZ": 1,"gyroX": -656, "gyroY": -415, "gyroZ": 110, "pressure": 1, "erase": 0}')
     i, j, k = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
     X = 0*i+0*j+0*k                                     # origin
     canvas = np.ones((1080, 1920))                      # defining the canvas
+    R,Xa=changeCoordinateSystem(A, G, Xa)               # next line exists
+    calculateCoordinates(R, A)
+    plotPoints()
+    time.sleep(rr)
+
     cv.imshow('image', canvas)
-    
-
-    print("[STARTING] server is starting...")
-    start()
-    
-    
-
-    
-
-    
+    cv.waitKey(0)
+    cv.destroyAllWindows()

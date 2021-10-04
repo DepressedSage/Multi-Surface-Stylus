@@ -35,11 +35,7 @@ if __name__ == "__main__":
 
     canvas = np.ones((1080, 1920))
 
-    while(1):
-        if(pressure > thresh):
-            write(x, y)
-        else:
-            cleararr()
+    write(0, 0)
 
     cv.imshow("image", canvas)
     cv.waitKey(0)
