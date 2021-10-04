@@ -16,6 +16,7 @@ const char* password = STAPSK;
 const char* host = "192.168.1.12";
 const uint16_t port = 5050;
 
+const char* DISCONNECT_MESSAGE = "!DISCONNECT";
 void setup() {
   Serial.begin(115200);
 
@@ -61,12 +62,14 @@ void loop() {
 
   // This will send a string to the server
   Serial.println("sending data to server");
-  if (client.connected()) {
-    client.println("hello from ESP8266");
+  while(client.connected()) {
+    client.print("");
+    client.print("hi");
+    delay(100);
   }
 
   // wait for data to be available
-  unsigned long timeout = millis();
+  /*unsigned long timeout = millis();
   while (client.available() == 0) {
     if (millis() - timeout > 5000) {
       Serial.println(">>> Client Timeout !");
@@ -74,7 +77,7 @@ void loop() {
       delay(60000);
       return;
     }
-  }
+  }*/
 
 
   // Close the connection

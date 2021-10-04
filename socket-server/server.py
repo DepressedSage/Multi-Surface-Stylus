@@ -14,19 +14,21 @@ socketServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socketServer.bind(ADDR)
 
 def handleClient(conn, addr):
-    print("[NEW CONNECTION] {addr} connected.")
+    print(f"[NEW CONNECTION] {addr} connected.")
 
     connected = True
     while connected:
-        msg_length = conn.recv(HEADER).decode(FORMAT)
+        msg = conn.recv(HEADER).decode(FORMAT)
+        msgLength=len(msg)
         if msgLength:
-            msgLength = int(msgLength)
-            msg = conn.recv(msgLength).decode(FORMAT)
+           # msgLength = int(msgLength)
+            msg = conn.recv(HEADER).decode(FORMAT)
+            print(f"[{addr}] {msg}")
+            print(len(msg))
             if msg == DISCONNECT_MESSAGE:
                 connected = False
 
-        print(f"[{addr}] {msg}")
-
+    print("Closing connection")
     conn.close()
 
 def start():
@@ -34,9 +36,9 @@ def start():
     print("[LISTENING] Server is listening on", SERVER)
     while True:
         conn, addr = socketServer.accept()
-        #thread = threading.Thread(target = handleClient, args = (conn, addr))
-        #thread.start()
-        #print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
+        thread = threading.Thread(target = handleClient, args = (conn, addr))
+        thread.start()
+        print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
 
 print("[STARTING] server is starting...")
 start()
