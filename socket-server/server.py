@@ -1,7 +1,7 @@
 import socket
 import threading
 
-HEADER = 110
+HEADER = 200
 # Sets the port for the connection
 PORT = 5050
 # Gets the IPv4 address of the SERVER side device
